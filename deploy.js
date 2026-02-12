@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const commands = [];
+const loadedCommandNames = new Set(); // Para evitar duplicados
 
 function getCommandFiles(dir, files = []) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -17,9 +18,21 @@ function getCommandFiles(dir, files = []) {
 const commandFiles = getCommandFiles(path.join(__dirname, 'commands'));
 
 for (const filePath of commandFiles) {
-    const command = require(filePath);
-    if ('data' in command && 'execute' in command) {
-        commands.push(command.data.toJSON());
+    try {
+        const command = require(filePath);
+        if ('data' in command && 'execute' in command) {
+            const commandName = command.data.name;
+            // Evitar comandos duplicados
+            if (!loadedCommandNames.has(commandName)) {
+                commands.push(command.data.toJSON());
+                loadedCommandNames.add(commandName);
+                console.log(`✅ Comando preparado: ${commandName}`);
+            } else {
+                console.warn(`⚠️ Comando duplicado ignorado: ${commandName}`);
+            }
+        }
+    } catch (error) {
+        console.warn(`⚠️ No se pudo cargar ${path.basename(filePath)}: ${error.message}`);
     }
 }
 

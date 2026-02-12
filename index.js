@@ -9,6 +9,7 @@ const client = new Client({
 });
 
 client.commands = new Collection();
+const loadedCommandNames = new Set(); // Para evitar duplicados
 
 // --- CARGA DE COMANDOS ---
 // Soporta subcarpetas en 'commands'
@@ -27,13 +28,31 @@ if (fs.existsSync(commandsPath)) {
     const commandFiles = getCommandFiles(commandsPath);
 
     for (const filePath of commandFiles) {
-        const command = require(filePath);
-        // Verificamos que el comando tenga la estructura de Slash Command (data y execute)
-        if ('data' in command && 'execute' in command) {
-            client.commands.set(command.data.name, command);
-            console.log(`✅ Comando cargado: ${command.data.name}`);
+        try {
+            // Limpiar el cache de require para recargar archivos modificados
+            delete require.cache[require.resolve(filePath)];
+            const command = require(filePath);
+            // Verificamos que el comando tenga la estructura de Slash Command (data y execute)
+            if ('data' in command && 'execute' in command) {
+                const commandName = command.data.name;
+                // Evitar comandos duplicados
+                if (!loadedCommandNames.has(commandName)) {
+                    client.commands.set(commandName, command);
+                    loadedCommandNames.add(commandName);
+                    console.log(`✅ Comando cargado: ${commandName}`);
+                } else {
+                    console.warn(`⚠️ Comando duplicado ignorado: ${commandName}`);
+                }
+            } else {
+                console.warn(`⚠️ Estructura inválida en ${path.basename(filePath)}`);
+            }
+        } catch (error) {
+            console.warn(`⚠️ No se pudo cargar ${path.basename(filePath)}: ${error.message}`);
         }
     }
+    console.log(`📦 Total de comandos válidos cargados: ${client.commands.size}`);
+} else {
+    console.warn(`⚠️ Carpeta 'commands' no encontrada`);
 }
 
 client.once(Events.ClientReady, c => {

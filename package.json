@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "deploy": "node deploy.js"
   },
   "dependencies": {
+    "discord-gamecord": "^4.4.4",
     "discord.js": "^14.x.x",
     "dotenv": "^16.x.x"
   }
