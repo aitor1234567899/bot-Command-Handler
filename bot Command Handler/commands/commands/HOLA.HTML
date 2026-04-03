@@ -13,37 +13,37 @@
         body { font-family: 'Whitney', sans-serif; background-color: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         .main-container { display: flex; gap: 20px; flex: 1; overflow: hidden; }
         
-        /* EDITOR */
         .editor-panel { flex: 1.2; background-color: var(--bg-editor); padding: 20px; border-radius: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .section-title { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid #4f545c; padding-bottom: 4px; margin-top: 10px; }
         input, textarea { padding: 10px; background: var(--bg-dark); border: 1px solid #1e1e1e; border-radius: 4px; color: white; font-size: 14px; }
         
-        /* BOTONES */
         .toolbar { display: flex; gap: 4px; background: #202225; padding: 8px; border-radius: 4px 4px 0 0; border: 1px solid #1e1e1e; margin-bottom: -6px; }
         .btn-tool { color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 12px; }
         .btn-format { background: #4f545c; }
+        .btn-h1 { background: #72767d; color: white; } /* Botón para el título grande */
         .btn-link { background: var(--discord-green); }
         .btn-clear { background: var(--discord-red); margin-left: auto; }
 
-        /* VISTA PREVIA */
         .preview-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
         .discord-embed { background: var(--bg-dark); border-radius: 4px; padding: 16px; border-left: 4px solid #5865f2; position: relative; }
         .embed-author { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         .embed-author img { width: 24px; height: 24px; border-radius: 50%; }
         .embed-title { font-size: 16px; font-weight: 600; color: var(--discord-link); text-decoration: none; display: block; margin-bottom: 5px; }
         .embed-description { font-size: 14px; white-space: pre-wrap; color: #dcddde; }
+        
+        /* Estilo para simular el # de Discord en la web */
+        .embed-description h1 { font-size: 1.2rem; margin: 8px 0; color: white; border-bottom: none; }
         .embed-description b { color: white; }
         .embed-description a { color: var(--discord-link); text-decoration: none; }
+
         .embed-thumbnail { width: 80px; height: 80px; border-radius: 4px; position: absolute; top: 16px; right: 16px; }
         .embed-image { max-width: 100%; border-radius: 4px; margin-top: 10px; }
         .embed-footer { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); margin-top: 10px; }
         .embed-footer img { width: 20px; height: 20px; border-radius: 50%; }
 
-        /* JSON Y NOTIFICACIÓN */
         .json-box { background: black; color: #0f0; padding: 15px; font-family: monospace; font-size: 12px; border-radius: 4px; flex: 1; overflow-y: auto; }
         .copy-btn { width: 100%; padding: 15px; background: var(--discord-blurple); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
         
-        /* EL NUEVO AVISO (TOAST) */
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: var(--discord-green); color: white; padding: 12px 25px; border-radius: 50px;
@@ -64,6 +64,7 @@
 
             <div class="section-title">Cuerpo</div>
             <div class="toolbar">
+                <button class="btn-tool btn-h1" onclick="applyFormat('# ', true)">H1 (Grande)</button>
                 <button class="btn-tool btn-format" onclick="applyFormat('**')">B</button>
                 <button class="btn-tool btn-format" onclick="applyFormat('*')">I</button>
                 <button class="btn-tool btn-link" onclick="applyLinkFormat()">Link [ ]( )</button>
@@ -104,11 +105,20 @@
     <div id="toast">✅ ¡Código copiado al portapapeles!</div>
 
     <script>
-        function applyFormat(sym) {
+        // Función mejorada para soportar prefijos (como el #)
+        function applyFormat(sym, isPrefix = false) {
             const area = document.getElementById('description');
             const start = area.selectionStart;
             const end = area.selectionEnd;
-            area.value = area.value.substring(0, start) + sym + area.value.substring(start, end) + sym + area.value.substring(end);
+            
+            if(isPrefix) {
+                // Inserta el símbolo al inicio de la selección
+                area.value = area.value.substring(0, start) + sym + area.value.substring(start);
+            } else {
+                // Envuve la selección (negrita, cursiva)
+                area.value = area.value.substring(0, start) + sym + area.value.substring(start, end) + sym + area.value.substring(end);
+            }
+            
             updatePreview();
             area.focus();
         }
@@ -131,8 +141,13 @@
         function parseMarkdown(text) {
             if(!text) return "";
             return text
+                // Títulos grandes (# Texto)
+                .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
+                // Negritas (**Texto**)
                 .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                // Cursivas (*Texto*)
                 .replace(/\*(.*?)\*/g, '<i>$1</i>')
+                // Links ([Texto](URL))
                 .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
         }
 
@@ -174,8 +189,6 @@
         function copyCode() {
             const code = document.getElementById('json-code').innerText;
             navigator.clipboard.writeText(code);
-            
-            // Mostrar Toast en lugar de Alert
             const toast = document.getElementById('toast');
             toast.classList.add('show');
             setTimeout(() => { toast.classList.remove('show'); }, 2500);
