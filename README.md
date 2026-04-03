@@ -13,27 +13,6 @@ Este es un bot de comandos de código abierto diseñado para ser modular, rápid
 * **🛠️ Herramienta Web:** Incluye un diseñador HTML (`HOLA.HTML`) específico para generar el código visual del comando `!embed` sin errores de formato.
 * **🛡️ Moderación:** Incluye comandos de gestión como `kick`, `ban`, `nuke`, `lock` y más.
 
-## 📥 Instalación para Desarrolladores
-
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/tu-usuario/mi-bot.git](https://github.com/tu-usuario/mi-bot.git)
-   ```
-2. **Instalar las dependencias:**
-   ```bash
-   npm install
-   ```
-3. **Configurar el entorno:**
-   Crea un archivo `.env` y añade tu Token:
-   ```env
-   TOKEN=TU_TOKEN_AQUÍ
-   CLIENT_ID=ID_DEL_BOT
-   ```
-4. **Encender el Bot:**
-   ```bash
-   npm run start
-   ```
-
 ## 📖 Uso del Comando Embed
 
 El archivo **`HOLA.HTML`** es el compañero esencial de este bot:
