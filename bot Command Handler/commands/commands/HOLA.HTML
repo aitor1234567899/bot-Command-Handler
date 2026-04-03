@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Embed Builder Pro</title>
+    <title>Embed Builder Master Pro - Fixed</title>
     <style>
         :root {
             --bg-dark: #202225; --bg-main: #36393f; --bg-editor: #2f3136;
@@ -16,32 +16,27 @@
         .editor-panel { flex: 1.2; background-color: var(--bg-editor); padding: 20px; border-radius: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .section-title { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid #4f545c; padding-bottom: 4px; margin-top: 10px; }
         
-        input, textarea { 
-            padding: 10px; background: var(--bg-dark); border: 1px solid #1e1e1e; border-radius: 4px; color: white; font-size: 14px; 
-            word-wrap: break-word; overflow-wrap: break-word;
-        }
+        input, textarea { padding: 10px; background: var(--bg-dark); border: 1px solid #1e1e1e; border-radius: 4px; color: white; font-size: 14px; width: 95%; font-family: inherit; }
         
+        /* ARREGLO DE SCROLL EN DESCRIPCIÓN */
+        textarea#description { height: 150px; resize: vertical; overflow-y: auto; }
+
         .toolbar { display: flex; gap: 4px; background: #202225; padding: 8px; border-radius: 4px 4px 0 0; border: 1px solid #1e1e1e; margin-bottom: -6px; }
         .btn-tool { color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 12px; }
-        .btn-h1 { background: #72767d; }
-        .btn-format { background: #4f545c; }
-        .btn-clear { background: var(--discord-red); margin-left: auto; }
 
-        .preview-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; max-width: 450px; }
-        .discord-embed { 
-            background: var(--bg-dark); border-radius: 4px; padding: 16px; border-left: 4px solid #5865f2; 
-            position: relative; word-wrap: break-word;
-        }
+        .preview-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 400px; flex-shrink: 0; overflow: hidden; }
+        .discord-embed { background: var(--bg-dark); border-radius: 4px; padding: 16px; border-left: 4px solid #5865f2; position: relative; word-break: break-all; }
         
+        .embed-author { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .embed-author img { width: 24px; height: 24px; border-radius: 50%; }
         .embed-title { font-size: 16px; font-weight: 600; color: white; text-decoration: none; display: block; margin-bottom: 5px; }
         .embed-description { font-size: 14px; white-space: pre-wrap; color: #dcddde; }
-        .embed-description h1 { font-size: 1.2rem; margin: 8px 0; color: white; }
+        .embed-thumbnail { width: 80px; height: 80px; border-radius: 4px; position: absolute; top: 16px; right: 16px; object-fit: cover; }
+        .embed-image { max-width: 100%; border-radius: 4px; margin-top: 10px; display: block; }
+        .embed-footer { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); margin-top: 10px; }
 
-        .json-box { background: black; color: #0f0; padding: 15px; font-family: monospace; font-size: 12px; border-radius: 4px; flex: 1; overflow-y: auto; word-break: break-all; }
+        .json-box { background: black; color: #0f0; padding: 15px; font-family: monospace; font-size: 12px; border-radius: 4px; flex: 1; overflow-y: auto; }
         .copy-btn { width: 100%; padding: 15px; background: var(--discord-blurple); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--discord-green); color: white; padding: 12px 25px; border-radius: 50px; transition: 0.4s; opacity: 0; }
-        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
@@ -50,36 +45,45 @@
         <div class="editor-panel">
             <div class="section-title">Autor y Título</div>
             <input type="text" id="author_name" placeholder="Nombre del Autor" oninput="updatePreview()">
-            <input type="text" id="author_icon" placeholder="URL Icono del Autor" oninput="updatePreview()">
+            <input type="text" id="author_icon" placeholder="URL Icono Autor" oninput="updatePreview()">
             <input type="text" id="title" placeholder="Título" oninput="updatePreview()">
             <input type="text" id="url" placeholder="URL del Título (Link)" oninput="updatePreview()">
 
             <div class="section-title">Cuerpo</div>
             <div class="toolbar">
-                <button class="btn-tool btn-h1" onclick="applyFormat('# ', true)">H1</button>
-                <button class="btn-tool btn-format" onclick="applyFormat('**')">B</button>
-                <button class="btn-tool btn-format" onclick="applyFormat('*')">I</button>
-                <button class="btn-tool btn-clear" onclick="clearEditor()">Limpiar 🗑️</button>
+                <button class="btn-tool" style="background:#72767d" onclick="applyFormat('# ', true)">H1</button>
+                <button class="btn-tool" style="background:#4f545c" onclick="applyFormat('**')">B</button>
+                <button class="btn-tool" style="background:var(--discord-red); margin-left:auto" onclick="clearEditor()">Borrar 🗑️</button>
             </div>
-            <textarea id="description" rows="5" placeholder="Escribe aquí..." oninput="updatePreview()"></textarea>
+            <textarea id="description" placeholder="Escribe aquí tu mensaje..." oninput="updatePreview()"></textarea>
 
             <div class="section-title">Multimedia y Color</div>
-            <input type="color" id="color" value="#5865f2" oninput="updatePreview()" style="width:100%; height:35px; border:none; cursor:pointer;">
-            <input type="text" id="thumb_url" placeholder="URL Miniatura" oninput="updatePreview()">
-            <input type="text" id="image_url" placeholder="URL Imagen Grande" oninput="updatePreview()">
+            <input type="color" id="color" value="#5865f2" oninput="updatePreview()" style="width:100%; height:35px; cursor:pointer;">
+            <input type="text" id="thumb_url" placeholder="URL Miniatura (Derecha)" oninput="updatePreview()">
+            <input type="text" id="image_url" placeholder="URL Imagen Grande (Abajo)" oninput="updatePreview()">
+
+            <div class="section-title">Pie de Página</div>
+            <input type="text" id="footer_text" placeholder="Texto del footer" oninput="updatePreview()">
         </div>
 
         <div class="preview-panel">
             <div class="discord-embed" id="embed-box">
+                <img src="" id="p-thumb" class="embed-thumbnail" style="display:none;">
+                <div class="embed-author" id="p-auth-box" style="display:none;">
+                    <img src="" id="p-auth-icon" style="display:none; width:24px; height:24px; border-radius:50%">
+                    <span id="p-auth-name"></span>
+                </div>
                 <div id="p-title" class="embed-title"></div>
                 <div class="embed-description" id="p-desc"></div>
+                <img src="" id="p-main-img" class="embed-image" style="display:none;">
+                <div class="embed-footer" id="p-foot-box" style="display:none;">
+                    <span id="p-foot-text"></span>
+                </div>
             </div>
             <div class="json-box" id="json-code"></div>
             <button class="copy-btn" onclick="copyCode()">📋 COPIAR JSON</button>
         </div>
     </div>
-
-    <div id="toast">✅ ¡Diseño copiado!</div>
 
     <script>
         function applyFormat(sym, isPrefix = false) {
@@ -91,28 +95,44 @@
 
         function updatePreview() {
             const get = (id) => document.getElementById(id).value;
-            const titleVal = get('title');
-            
-            document.getElementById('p-title').innerText = titleVal;
-            document.getElementById('p-title').style.display = titleVal ? 'block' : 'none';
+            const setImg = (id, url) => {
+                const el = document.getElementById(id);
+                // Validación para que se muestre solo si empieza por http
+                if(url && url.startsWith('http')) { el.src = url; el.style.display = 'block'; } 
+                else { el.style.display = 'none'; }
+            };
+
+            document.getElementById('p-title').innerText = get('title');
+            document.getElementById('p-title').style.display = get('title') ? 'block' : 'none';
             document.getElementById('p-desc').innerText = get('description') || "Vista previa...";
             document.getElementById('embed-box').style.borderLeftColor = get('color');
 
-            const embed = {
-                title: titleVal || null,
+            // Actualización de imágenes
+            setImg('p-auth-icon', get('author_icon'));
+            setImg('p-thumb', get('thumb_url'));
+            setImg('p-main-img', get('image_url'));
+
+            document.getElementById('p-auth-box').style.display = get('author_name') ? 'flex' : 'none';
+            document.getElementById('p-auth-name').innerText = get('author_name');
+            document.getElementById('p-foot-box').style.display = get('footer_text') ? 'flex' : 'none';
+            document.getElementById('p-foot-text').innerText = get('footer_text');
+
+            const json = {
+                title: get('title') || null,
+                url: get('url') || null,
                 description: get('description') || null,
                 color: parseInt(get('color').replace('#', ''), 16),
                 author: get('author_name') ? { name: get('author_name'), icon_url: get('author_icon') } : null,
                 image: get('image_url') ? { url: get('image_url') } : null,
-                thumbnail: get('thumb_url') ? { url: get('thumb_url') } : null
+                thumbnail: get('thumb_url') ? { url: get('thumb_url') } : null,
+                footer: get('footer_text') ? { text: get('footer_text') } : null
             };
-            document.getElementById('json-code').innerText = JSON.stringify(embed, null, 2);
+            document.getElementById('json-code').innerText = JSON.stringify(json, null, 2);
         }
 
         function copyCode() {
             navigator.clipboard.writeText(document.getElementById('json-code').innerText);
-            document.getElementById('toast').classList.add('show');
-            setTimeout(() => document.getElementById('toast').classList.remove('show'), 2000);
+            alert("✅ JSON copiado");
         }
 
         function clearEditor() {
