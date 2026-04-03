@@ -1,15 +1,47 @@
-🚀 BOT  | Open Source Command Handler
+
+
+# 🚀 BOT | Open Source Command Handler
 
 
 
-
-BOT  es un bot de comandos de código abierto diseñado para ser modular, rápido y fácil de personalizar. Utiliza un sistema de carga dinámica de comandos para que puedas añadir funciones simplemente creando un archivo `.js`.
+Este es un bot de comandos de código abierto diseñado para ser modular, rápido y fácil de personalizar. Utiliza un sistema de carga dinámica de comandos para que puedas añadir funciones simplemente creando un archivo `.js`.
 
 ## 🌟 Características principales
 
-* 📂 Modular: Cada comando es un archivo independiente en la carpeta `/commands`.
-* 🎨 Embed Master: Sistema integrado para enviar anuncios profesionales mediante JSON.
-* 🛠️ Herramienta Web: Incluye un diseñador HTML (`HOLA.HTML`) para crear mensajes visuales sin programar.
-* 🛡️ Moderación: Comandos de `kick`, `ban`, `nuke`, `lock` y más incluidos de fábrica.
+* **📂 Modular:** Cada comando es un archivo independiente en la carpeta `/commands`.
+* **🎨 Embed Master:** Sistema integrado para enviar anuncios profesionales mediante el comando `!embed`.
+* **🛠️ Herramienta Web:** Incluye un diseñador HTML (`HOLA.HTML`) específico para generar el código visual del comando `!embed` sin errores de formato.
+* **🛡️ Moderación:** Incluye comandos de gestión como `kick`, `ban`, `nuke`, `lock` y más.
 
 ## 📥 Instalación para Desarrolladores
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/tu-usuario/mi-bot.git](https://github.com/tu-usuario/mi-bot.git)
+   ```
+2. **Instalar las dependencias:**
+   ```bash
+   npm install
+   ```
+3. **Configurar el entorno:**
+   Crea un archivo `.env` y añade tu Token:
+   ```env
+   TOKEN=TU_TOKEN_AQUÍ
+   CLIENT_ID=ID_DEL_BOT
+   ```
+4. **Encender el Bot:**
+   ```bash
+   npm run start
+   ```
+
+## 📖 Uso del Comando Embed
+
+El archivo **`HOLA.HTML`** es el compañero esencial de este bot:
+1. Abre `HOLA.HTML` en tu navegador.
+2. Diseña tu mensaje (títulos grandes, imágenes, colores).
+3. Pulsa el botón **📋 COPIAR JSON PARA EL BOT**.
+4. En Discord, usa el comando `!embed` seguido del código copiado.
+
+---
+**Mantenido por Aitor2010** | *Proyecto de código abierto para la comunidad.*
+```
