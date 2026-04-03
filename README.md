@@ -1,46 +1,15 @@
-📜 LISTA COMPLETA DE COMANDOS ACTUALES 🚀
-👮 MODERACIÓN (EL MARTILLO DE LA LEY)
-/ban: Expulsa permanentemente a un usuario del servidor 🔨.
+🚀 BOT  | Open Source Command Handler
 
-/unban: Permite que un usuario baneado regrese usando su ID 🔓.
 
-/kick: Echa a un usuario, pero podrá volver con una invitación 👟.
 
-/warn: Pone una advertencia y le avisa al usuario por mensaje privado (DM) ⚠️.
 
-/clear: Borra entre 1 y 100 mensajes de un canal de forma instantánea 🧹.
+BOT  es un bot de comandos de código abierto diseñado para ser modular, rápido y fácil de personalizar. Utiliza un sistema de carga dinámica de comandos para que puedas añadir funciones simplemente creando un archivo `.js`.
 
-/lock: Bloquea el canal para que nadie escriba; úsalo de nuevo para desbloquear 🔒.
+## 🌟 Características principales
 
-/nuke: Borra el canal actual y lo recrea vacío. ¡Limpieza extrema! 💥.
+* 📂 Modular: Cada comando es un archivo independiente en la carpeta `/commands`.
+* 🎨 Embed Master: Sistema integrado para enviar anuncios profesionales mediante JSON.
+* 🛠️ Herramienta Web: Incluye un diseñador HTML (`HOLA.HTML`) para crear mensajes visuales sin programar.
+* 🛡️ Moderación: Comandos de `kick`, `ban`, `nuke`, `lock` y más incluidos de fábrica.
 
-/slowmode: Establece cuántos segundos deben esperar los usuarios entre mensajes ⏳.
-
-/slowmode-off: Quita el tiempo de espera del canal inmediatamente ⏲️.
-
-/list-bans: Muestra a todos los usuarios que están actualmente en la "lista negra" 🚫.
-
-💡 UTILIDAD Y CONSULTA (LOS SABIOS)
-/userinfo: Te da todos los detalles de un miembro: ID, roles y fecha de unión 👤.
-
-/server: Muestra la foto, el dueño y las estadísticas del servidor 🏰.
-
-/ping: Te dice qué tan rápido está respondiendo el bot en milisegundos 🏓.
-
-/say: El bot repite exactamente lo que tú escribas 🗣️.
-
-/dm: Permite que el bot le envíe un mensaje privado a quien tú quieras 📩.
-
-/avatar: Muestra la foto de perfil de alguien en alta calidad para verla mejor 🖼️.
-
-🎭 DIVERSIÓN Y COMUNIDAD
-/poll: Crea una encuesta con botones para que todos voten fácilmente 🗳️.
-
-/sugerir: Permite a los usuarios enviar ideas que el Staff puede aprobar o rechazar ✅❌.
-
-🎨 POR QUÉ TU BOT ES ESPECIAL ✨
-Estilo Visual: Todos los mensajes (Embeds) tienen un color aleatorio diferente cada vez 🌈.
-
-Chat Limpio (Efímero): Muchas respuestas son invisibles para los demás; solo tú verás la confirmación del bot 👻.
-
-Seguro y Estable: Al no tocar el archivo index.js, tu bot corre sin errores innecesarios 🛡️
+## 📥 Instalación para Desarrolladores
